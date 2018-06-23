@@ -27,7 +27,7 @@ public class SocketServer implements Runnable {
     }
 
     //字符转16进制
-    private static String bytesToHexString(byte[] b) {
+    public static String bytesToHexString(byte[] b) {
         StringBuilder sb = new StringBuilder();
         if (b == null || b.length <= 0) {
             return null;
@@ -201,20 +201,6 @@ public class SocketServer implements Runnable {
                     System.out.println(bytesToHexString(b_heart));
                     System.out.println();
                 }
-                //状态包协议0x13
-//                if (bytes[6] == 49 && bytes[7] == 51) {
-//                    //return b_st;
-//                    os.write(b_st);
-//                    os.flush();
-//                    System.out.println(bytesToHexString(b_st));
-//                    System.out.println();
-//                }
-
-                //更新协议0x30
-//                if (bytes[6] == 51 && bytes[7] == 48) {
-//
-//
-//                }
 
                 //Gps数据协议0x10
                 if(bytes[6] == 49 && bytes[7] == 48){
@@ -480,6 +466,7 @@ public class SocketServer implements Runnable {
     * */
     private static String[][] sortToMac(String[][] arrays,int num){
         String[][] newArrays=new String[2][8];
+        //count表示取有效mac点
         int count=0;
         for(int i = 0;i<num;i++){
             //通过http请求判断mac所对应对地理位置是否可查询

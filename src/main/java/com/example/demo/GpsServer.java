@@ -1,8 +1,8 @@
 package com.example.demo;
 
 public class GpsServer {
-    public static String lon=null;
-    public static String lat=null;
+    //public static String lon=null;
+    //public static String lat=null;
 
     public static double GpsLocation(String gps){
         int g = Integer.parseInt(gps,16);
