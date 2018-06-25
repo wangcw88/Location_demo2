@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import com.example.demo.SocketServer;
 import com.example.demo.GpsServer;
+import com.example.demo.LbsServer;
 @SpringBootApplication
 @ComponentScan("com.example.demo")
 public class DemoApplication {
@@ -31,6 +32,11 @@ public class DemoApplication {
 //
 //		D=WiFiServer.locAlgorithm(A,B,C);
 //		System.out.println(D[0]+"  "+D[1]);
+
+//		String sb = "2866";
+//		int i=Integer.valueOf(sb,16);
+//		System.out.println(i);
+		//LbsServer.LBSLocation();
 
 		//服务端在10006端口监听客户端请求的TCP连接
 		ServerSocket server = new ServerSocket(10006);

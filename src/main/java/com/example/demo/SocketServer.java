@@ -17,11 +17,12 @@ import javax.print.DocFlavor;
 import static java.lang.Byte.parseByte;
 import static java.lang.Double.valueOf;
 import java.lang.Double;
+import com.example.demo.LbsServer;
 
 
 public class SocketServer implements Runnable {
     public Socket client = null;
-
+    String imei;
     public SocketServer(Socket client) {
         this.client = client;
     }
@@ -189,6 +190,7 @@ public class SocketServer implements Runnable {
                 //登入协议0x01
                 if (bytes[6] == 48 && bytes[7] == 49) {
                    // return b_login;
+                    imei=getImei(bytes);
                     os.write(b_login);
                     os.flush();
                     System.out.println(bytesToHexString(b_login));
@@ -215,14 +217,11 @@ public class SocketServer implements Runnable {
 
                 }
                 if(bytes[6]==56 && bytes[7]==48){
-//                    os.write(b_heart);
-//                    os.flush();
-//                    System.out.println(bytesToHexString(b_heart));
-//                    System.out.println();
+
                 }
 
-                //wifi数据协议0x69 或者为手动定位0280
-                if ((bytes[6] == 54 && bytes[7] == 57) /*|| (bytes[6] == 49 && bytes[7] == 55)*/ /*|| (bytes[6] == 56 && bytes[7] == 48 && bytes[5] == 50 && bytes[4]==48)*/ ) {
+                //wifi数据协议0x69
+                if (bytes[6] == 54 && bytes[7] == 57){
 
                     //定义变量表示采集到的wifi数量
                     int count = bytes[5]-48;
@@ -391,9 +390,10 @@ public class SocketServer implements Runnable {
         return sb.toString();
     }
 
-    /*
+    /**
     * 功能 根据信号强度对rssi值进行冒泡排序---强度由大至小
-    * @param 关于信号强度的字符串数组strings，
+    * @param strings 关于信号强度的字符串数组strings，
+    * @param count
     * */
     private static void rssiSort(String[][] strings,int count){
         int x,y;
@@ -446,9 +446,9 @@ public class SocketServer implements Runnable {
     private static boolean wifiMsg(String[][] arrays, int i, double[] array, boolean log){
         WiFiServer.WifiLocation(arrays[1][i-1]);
         //System.out.println(arrays[1][i-1]+"  "+arrays[0][i-1]);
-        if(WiFiServer.errcode != 10001) {
-            array[0] = valueOf(WiFiServer.lon.toString());
-            array[1] = valueOf(WiFiServer.lat.toString());
+        if(WiFiServer.ap_errcode != 10001) {
+            array[0] = valueOf(WiFiServer.ap_lon.toString());
+            array[1] = valueOf(WiFiServer.ap_lat.toString());
             array[2] = rssiValue(arrays[0][i-1]);
             System.out.println(array[0]+"  "+array[1]+"  "+array[2]);
             log=true;
@@ -458,11 +458,11 @@ public class SocketServer implements Runnable {
         }
         return log;
     }
-    /*
+    /**
     *
-    *  Function：筛选有有效地理位置的mac地址 并对其进行排序并删减
-    *  @param    存放mac和rssi的二维数组：arrays
-    *
+    *  @function  筛选有有效地理位置的mac地址 并对其进行排序并删减
+    *  @param    arrays 存放mac和rssi的二维数组
+    *  @param    num    收集到wifi热点的数量
     * */
     private static String[][] sortToMac(String[][] arrays,int num){
         String[][] newArrays=new String[2][8];
@@ -471,7 +471,7 @@ public class SocketServer implements Runnable {
         for(int i = 0;i<num;i++){
             //通过http请求判断mac所对应对地理位置是否可查询
             WiFiServer.WifiLocation(arrays[1][i]);
-            if(WiFiServer.errcode != 10001){
+            if(WiFiServer.ap_errcode != 10001){
                 //对二维数组进行重新排序
                 newArrays[0][count]=arrays[0][i];
                 newArrays[1][count]=arrays[1][i];
@@ -489,15 +489,32 @@ public class SocketServer implements Runnable {
 
         UserDaoImp userDaoImp = new UserDaoImp();
 
-        if (userDaoImp.Findusername("wangcw")) {
+        if (userDaoImp.Findusername(getLast6ID(imei))) {
             //更新数据库
-            userDaoImp.update(String.valueOf(D[1]), String.valueOf(D[0]), "wangcw");
+            userDaoImp.update(String.valueOf(D[1]), String.valueOf(D[0]), getLast6ID(imei));
             System.out.println("更新成功");
         } else {
             //创建插入数据库
-            userDaoImp.create(String.valueOf(D[1]), String.valueOf(D[0]), "wangcw");
+            userDaoImp.create(String.valueOf(D[1]), String.valueOf(D[0]), getLast6ID(imei));
             System.out.println("插入成功");
         }
+    }
+
+    private static String getImei(byte[] bytes){
+        StringBuilder imei =new StringBuilder();
+        char a;
+        for(int i=0;i<16;i++){
+            a = (char)bytes[7+i];
+            imei.append(a);
+        }
+        return imei.toString();
+    }
+
+    /**
+     * 取imei后6位作为id
+     */
+    private static String getLast6ID(String str){
+        return str.substring(str.length()-6);
     }
 }
 

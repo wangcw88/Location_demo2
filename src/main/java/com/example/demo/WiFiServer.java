@@ -1,5 +1,6 @@
 package com.example.demo;
 
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,20 +11,21 @@ import org.apache.http.util.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.io.IOException;
 import java.util.Arrays;
 
 public class WiFiServer {
 
-    public static String lon=null;
-    public static String lat=null;
-    public static long errcode=0;
+    public static String ap_lon=null;
+    public static String ap_lat=null;
+    public static long ap_errcode=0;
     //API接口查询mac的坐标
     public static void WifiLocation(String mac){
         //定义变量经纬度
-        String lon=null;
-        String lat=null;
-        int errcode =10001;
+        String ap_lon=null;
+        String ap_lat=null;
+        int ap_errcode =10001;
         String url="http://api.cellocation.com:81/wifi/?coord=gcj02&output=json&";
         String url_constant="http://api.cellocation.com:81/wifi/?coord=gcj02&output=json&";
         try {
@@ -43,23 +45,22 @@ public class WiFiServer {
             //   jsonStirng!=null&&!"".equals(jsonString)
             if (json != null) {
                 //System.out.println(json.toString());
-
                 JSONObject jsonObject = new JSONObject(json);
-                lon = jsonObject.get("lon").toString();
-                lat = jsonObject.get("lat").toString();
-                errcode = (int) jsonObject.get("errcode");
+                ap_lon = jsonObject.get("lon").toString();
+                ap_lat = jsonObject.get("lat").toString();
+                ap_errcode = (int) jsonObject.get("errcode");
             }
-            if (errcode == 10001) {
+            if (ap_errcode == 10001) {
                 //json = "定位失败请重新定位";
-                WiFiServer.errcode=10001;
+                WiFiServer.ap_errcode=10001;
             }
-            else if (errcode == 10000){
-                WiFiServer.errcode=10000;
+            else if (ap_errcode == 10000){
+                WiFiServer.ap_errcode=10000;
 
             }else {
-                WiFiServer.errcode=0;
-                WiFiServer.lat=lat;
-                WiFiServer.lon=lon;
+                WiFiServer.ap_errcode=0;
+                WiFiServer.ap_lat=ap_lat;
+                WiFiServer.ap_lon=ap_lon;
             }
         } catch (IOException e){
             e.printStackTrace();
