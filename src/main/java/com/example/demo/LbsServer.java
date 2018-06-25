@@ -115,7 +115,7 @@ public class LbsServer {
             HttpEntity entity = response.getEntity();
             //获取响应的结果信息
             String json = EntityUtils.toString(entity, "UTF-8");
-            //   jsonStirng!=null&&!"".equals(jsonString)
+
             if (json != null) {
                 JSONObject jsonObject = new JSONObject(json);
                 lbs_lon = jsonObject.get("lon").toString();
@@ -139,6 +139,8 @@ public class LbsServer {
         }catch (JSONException e){
             e.printStackTrace();
         }
+
+
     }
 
 
