@@ -1,24 +1,12 @@
 package com.example.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.net.InetAddress;
+
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.example.demo.GpsServer;
-import java.lang.Byte;
-import com.example.demo.WiFiServer;
-import sun.jvm.hotspot.runtime.Bytes;
-
-import javax.print.DocFlavor;
-
-import static java.lang.Byte.parseByte;
 import static java.lang.Double.valueOf;
-import java.lang.Double;
-import com.example.demo.LbsServer;
-
 
 public class SocketServer implements Runnable {
     public Socket client = null;
@@ -489,13 +477,13 @@ public class SocketServer implements Runnable {
 
         UserDaoImp userDaoImp = new UserDaoImp();
 
-        if (userDaoImp.Findusername(getLast6ID(imei))) {
+        if (userDaoImp.Findusername("wangcw")) {
             //更新数据库
-            userDaoImp.update(String.valueOf(D[1]), String.valueOf(D[0]), getLast6ID(imei));
+            userDaoImp.update(String.valueOf(D[1]), String.valueOf(D[0]), "wangcw");
             System.out.println("更新成功");
         } else {
             //创建插入数据库
-            userDaoImp.create(String.valueOf(D[1]), String.valueOf(D[0]), getLast6ID(imei));
+            userDaoImp.create(String.valueOf(D[1]), String.valueOf(D[0]), "wangcw");
             System.out.println("插入成功");
         }
     }
@@ -516,5 +504,6 @@ public class SocketServer implements Runnable {
     private static String getLast6ID(String str){
         return str.substring(str.length()-6);
     }
+    //jijiji
 }
 
