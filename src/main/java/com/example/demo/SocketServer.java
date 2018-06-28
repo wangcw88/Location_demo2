@@ -504,6 +504,6 @@ public class SocketServer implements Runnable {
     private static String getLast6ID(String str){
         return str.substring(str.length()-6);
     }
-    //jijiji
+    //jijijikkk
 }
 
